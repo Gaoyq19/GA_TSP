@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D320DD822744F9A3004D1A26 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D320DD812744F9A3004D1A26 /* main.cpp */; };
+		D320DD8A27454BBD004D1A26 /* decode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D320DD8827454BBD004D1A26 /* decode.cpp */; };
+		D320DD8D27456865004D1A26 /* GA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D320DD8B27456865004D1A26 /* GA.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,10 @@
 /* Begin PBXFileReference section */
 		D320DD7E2744F9A3004D1A26 /* GA_TSP */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GA_TSP; sourceTree = BUILT_PRODUCTS_DIR; };
 		D320DD812744F9A3004D1A26 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		D320DD8827454BBD004D1A26 /* decode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = decode.cpp; sourceTree = "<group>"; };
+		D320DD8927454BBD004D1A26 /* decode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = decode.hpp; sourceTree = "<group>"; };
+		D320DD8B27456865004D1A26 /* GA.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GA.cpp; sourceTree = "<group>"; };
+		D320DD8C27456865004D1A26 /* GA.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GA.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,10 @@
 			isa = PBXGroup;
 			children = (
 				D320DD812744F9A3004D1A26 /* main.cpp */,
+				D320DD8827454BBD004D1A26 /* decode.cpp */,
+				D320DD8927454BBD004D1A26 /* decode.hpp */,
+				D320DD8B27456865004D1A26 /* GA.cpp */,
+				D320DD8C27456865004D1A26 /* GA.hpp */,
 			);
 			path = GA_TSP;
 			sourceTree = "<group>";
@@ -120,6 +130,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D320DD822744F9A3004D1A26 /* main.cpp in Sources */,
+				D320DD8D27456865004D1A26 /* GA.cpp in Sources */,
+				D320DD8A27454BBD004D1A26 /* decode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
