@@ -12,7 +12,9 @@
 #include <stdio.h>
 #include <vector>
 #include <iostream>
+#include <string>
 #include <math.h>
+#include <Python.h>
 class Node{
 private:
     static const std::vector<double> node;
@@ -30,6 +32,23 @@ private:
         return sqrt( i + j );
     }
 public:
+    static void draw(std::vector<int> sequence){
+        
+        std::string command;
+        std::string x = "[";
+        std::string y = "[";
+        for (int i = 0; i < sequence.size(); ++i) {
+            x += std::to_string(getNode(sequence[i]).first);
+            x += ",";
+            y += std::to_string(getNode(sequence[i]).second);
+            y += ",";
+        }
+        x += "]";
+        y += "]";
+        command = "plt.plot(" + x + "," + y + ")";
+        PyRun_SimpleString(command.c_str());
+        PyRun_SimpleString("plt.show()");
+    }
     static double getDistance(std::vector<int> sequence){
         double distance = 0;
         for (int i = 0; i < sequence.size() - 1; ++i) {

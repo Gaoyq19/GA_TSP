@@ -10,6 +10,7 @@
 #define GA_hpp
 
 #include <stdio.h>
+#include <iostream>
 #include <map>
 #include <vector>
 #include <cstdlib>
@@ -23,8 +24,15 @@ private:
 public:
     void calFitness(){
         for (int i = 0; i < genotype.size(); ++i) {
-            fitness[i] = Node::getDistance(genotype[i]);
+            fitness.push_back(Node::getDistance(genotype[i]));
+            std::cout<<fitness[i]<<std::endl;
         }
+    }
+    void draw(){
+        for (auto i : genotype) {
+            Node::draw(i);
+        }
+        
     }
     void selection(){
         
