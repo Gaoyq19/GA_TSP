@@ -39,9 +39,11 @@ public:
         std::string y = "[";
         for (int i = 0; i < sequence.size(); ++i) {
             x += std::to_string(getNode(sequence[i]).first);
-            x += ",";
             y += std::to_string(getNode(sequence[i]).second);
-            y += ",";
+            if (i < sequence.size() - 1) {
+                x += ",";
+                y += ",";
+            }
         }
         x += "]";
         y += "]";

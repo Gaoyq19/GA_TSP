@@ -12,12 +12,12 @@
 
 using namespace std;
 int main(int argc, const char * argv[]) {
-    GA ga(10,1);
+    
     Py_Initialize(); /*初始化python解释器,告诉编译器要用的python编译器*/
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append('/usr/local/lib/python3.9/site-packages')");
     PyRun_SimpleString("import matplotlib.pyplot as plt"); /*调用python文件*/
-    ga.draw();
+    GA ga(20,10);
     Py_Finalize();
     return 0;
 }
