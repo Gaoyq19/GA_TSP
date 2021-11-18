@@ -17,7 +17,7 @@ int main(int argc, const char * argv[]) {
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append('/usr/local/lib/python3.9/site-packages')");
     PyRun_SimpleString("import matplotlib.pyplot as plt"); /*调用python文件*/
-    GA ga(20,10);
+    GA ga(200,60000);
     Py_Finalize();
     return 0;
 }

@@ -24,6 +24,7 @@ private:
     int maxfitness = -1;
     int eIndividuals;
     int mutationP = 5;
+    int crossoverP = 70;
 public:
     void calFitness(){
         for (int i = 0; i < genotype.size(); ++i) {
@@ -33,7 +34,6 @@ public:
                 eIndividuals = i;
             }
             fitness.push_back(distance);
-            std::cout<<fitness[i]<<std::endl;
         }
     }
     void draw(int i){
@@ -41,7 +41,7 @@ public:
     }
     void selection(){
         srand((unsigned int)time(0));
-        int size = individuals * 0.7;
+        int size = 12;
         std::vector<std::vector<int>> selectedGenotype;
         for (int i = 0; i < individuals; ++i) {
             int min = -1;
@@ -58,13 +58,19 @@ public:
     void crossover(){
         srand((unsigned int)time(0));
         int size = genotype[0].size();
-        int start = rand() % size;
-        int end = rand() % size;
-        if (start > end) {
-            std::swap(start, end);
-        }
         std::vector<std::vector<int>> childGenotype;
         for (int i = 0; i < genotype.size() - 1; i += 2) {
+            int r = rand() % 100;
+            if (r > crossoverP) {
+                childGenotype.push_back(genotype[i]);
+                childGenotype.push_back(genotype[i + 1]);
+                continue;
+            }
+            int start = rand() % size;
+            int end = rand() % size;
+            if (start > end) {
+                std::swap(start, end);
+            }
             std::vector<int> parent1 = genotype[i];
             std::vector<int> parent2 = genotype[i + 1];
             std::map<int, bool> part1;
@@ -101,7 +107,16 @@ public:
         genotype = childGenotype;
     }
     void mutation(){
-        
+        srand((unsigned int)time(0));
+        for (int i = 0; i < individuals; ++i) {
+            for (int j = 0; j < genotype[0].size(); ++j) {
+                int r = rand() % 500;
+                if (r < mutationP) {
+                    int k = rand() % 52;
+                    std::swap(genotype[i][j], genotype[i][k]);
+                }
+            }
+        }
     }
     void encode(int size){
         srand((unsigned int)time(0));
@@ -127,7 +142,6 @@ public:
             selection();
             crossover();
             mutation();
-            draw(eIndividuals);
             std::cout << "maxfitness:" << maxfitness<< std::endl;
         }
         
