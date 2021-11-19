@@ -40,11 +40,12 @@ public:
         for (int i = 0; i < sequence.size(); ++i) {
             x += std::to_string(getNode(sequence[i]).first);
             y += std::to_string(getNode(sequence[i]).second);
-            if (i < sequence.size() - 1) {
-                x += ",";
-                y += ",";
-            }
+            x += ",";
+            y += ",";
+            
         }
+        x += std::to_string(getNode(sequence[0]).first);
+        y += std::to_string(getNode(sequence[0]).second);
         x += "]";
         y += "]";
         command = "plt.plot(" + x + "," + y + ")";
