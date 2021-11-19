@@ -21,19 +21,19 @@ private:
     int individuals;
     std::vector<std::vector<int>> genotype;
     std::vector<double> fitness;
-    int maxfitness = -1;
+    int maxFitness = -1;
     int eIndividuals;
     int mutationP = 5;
     int crossoverP = 70;
 public:
     void calFitness(){
         for (int i = 0; i < genotype.size(); ++i) {
-            int distance = Node::getDistance(genotype[i]);
-            if (maxfitness == -1 || distance < maxfitness) {
-                maxfitness = distance;
+            int dis = Node::getDistance(genotype[i]);
+            if (maxFitness == -1 || dis < maxFitness) {
+                maxFitness = dis;
                 eIndividuals = i;
             }
-            fitness.push_back(distance);
+            fitness[i] = dis;
         }
     }
     void draw(int i){
@@ -41,7 +41,7 @@ public:
     }
     void selection(){
         srand((unsigned int)time(0));
-        int size = 12;
+        int size = 2;
         std::vector<std::vector<int>> selectedGenotype;
         for (int i = 0; i < individuals; ++i) {
             int min = -1;
@@ -109,12 +109,11 @@ public:
     void mutation(){
         srand((unsigned int)time(0));
         for (int i = 0; i < individuals; ++i) {
-            for (int j = 0; j < genotype[0].size(); ++j) {
-                int r = rand() % 500;
-                if (r < mutationP) {
-                    int k = rand() % 52;
-                    std::swap(genotype[i][j], genotype[i][k]);
-                }
+            int r = rand() % 500;
+            if (r < mutationP) {
+                int k = rand() % 52;
+                int k1 = rand() % 52;
+                std::swap(genotype[i][k1], genotype[i][k]);
             }
         }
     }
@@ -137,14 +136,16 @@ public:
     GA(int individuals, int generations){
         this->individuals = individuals;
         encode(individuals);
+        fitness = std::vector<double>(individuals);
+        draw(0);
         for (int i = 0; i < generations; ++i) {
             calFitness();
             selection();
             crossover();
             mutation();
-            std::cout << "maxfitness:" << maxfitness<< std::endl;
+            std::cout << "minDistance:" << maxFitness<< std::endl;
         }
-        
+        draw(eIndividuals);
     }
 };
 #endif /* GA_hpp */
