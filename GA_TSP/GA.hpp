@@ -24,8 +24,17 @@ private:
     int maxFitness = -1;
     int eIndividuals;
     int mutationP = 5;
-    int crossoverP = 70;
+    int crossoverP = 80;
 public:
+    std::vector<int> getGenotype(int i){
+        return genotype[i];
+    }
+    int getmaxFItness(){
+        return maxFitness;
+    }
+    int geteIndividuals(){
+        return eIndividuals;
+    }
     void calFitness(){
         for (int i = 0; i < genotype.size(); ++i) {
             int dis = Node::getDistance(genotype[i]);
@@ -137,15 +146,15 @@ public:
         this->individuals = individuals;
         encode(individuals);
         fitness = std::vector<double>(individuals);
-        draw(0);
+        //draw(0);
         for (int i = 0; i < generations; ++i) {
             calFitness();
             selection();
             crossover();
             mutation();
-            std::cout << "minDistance:" << maxFitness<< std::endl;
+            //std::cout << "minDistance:" << maxFitness<< std::endl;
         }
-        draw(eIndividuals);
+        //draw(eIndividuals);
     }
 };
 #endif /* GA_hpp */

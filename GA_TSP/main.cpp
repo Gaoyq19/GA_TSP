@@ -17,7 +17,21 @@ int main(int argc, const char * argv[]) {
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append('/usr/local/lib/python3.9/site-packages')");
     PyRun_SimpleString("import matplotlib.pyplot as plt"); /*调用python文件*/
-    GA ga(200,5000);
+    int minDistance = -1;
+    //GA *p = nullptr;
+    vector<int> sequence;
+    double total = 0;
+    for (int i = 0; i < 50; ++i) {
+        GA ga(200,500);
+        if (minDistance == -1 || ga.getmaxFItness() < minDistance) {
+            sequence = ga.getGenotype(i);
+            minDistance = ga.getmaxFItness();
+        }
+        total += ga.getmaxFItness();
+    }
+    cout<< "minDistance:" << minDistance << endl;
+    cout<< "average:" << total / 10 <<endl;
+    Node::draw(sequence);
     Py_Finalize();
     return 0;
 }
