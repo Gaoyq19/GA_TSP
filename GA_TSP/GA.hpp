@@ -152,7 +152,7 @@ public:
             selection();
             crossover();
             mutation();
-            //std::cout << "minDistance:" << maxFitness<< std::endl;
+            std::cout << "minDistance:" << maxFitness<< std::endl;
         }
         //draw(eIndividuals);
     }
