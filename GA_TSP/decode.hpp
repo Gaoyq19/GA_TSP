@@ -33,7 +33,6 @@ private:
     }
 public:
     static void draw(std::vector<int> sequence){
-        
         std::string command;
         std::string x = "[";
         std::string y = "[";
@@ -115,4 +114,5 @@ const std::vector<double> Node::node = {
     1340.0, 725.0,
     1740.0, 245.0,
 };
+
 #endif /* decode_hpp */
