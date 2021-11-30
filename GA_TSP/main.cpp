@@ -17,9 +17,10 @@ int main(int argc, const char * argv[]) {
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append('/usr/local/lib/python3.9/site-packages')");
     PyRun_SimpleString("import matplotlib.pyplot as plt"); /*调用python文件*/
-    int minDistance = -1;
+    
     //GA *p = nullptr;
     vector<int> sequence;
+    int minDistance = -1;
     double total = 0;
     for (int i = 0; i < 50; ++i) {
         GA ga(500,500);

@@ -23,8 +23,8 @@ private:
     std::vector<double> fitness;
     int maxFitness = -1; //最大适应度,即最小距离
     int eIndividuals; //最优个体序号
-    int mutationP = 5; //变异概率
-    int crossoverP = 90; //交叉概率
+    int pm = 10; //变异概率
+    int pc = 90; //交叉概率
 public:
     std::vector<int> getGenotype(int i);
     int getmaxFItness();
@@ -34,7 +34,7 @@ public:
     void selection(); //二元锦标赛
     void crossover(); //顺序交叉
     void mutation(); //随机交换两个节点
-    void encode(int size); //对初始种群编码,随机生成路径
+    void initializePopulation(int size); //对初始种群编码,随机生成路径
     GA(int individuals, int generations);
 };
 std::vector<int> GA::getGenotype(int i){
@@ -47,6 +47,7 @@ int GA::geteIndividuals(){
     return eIndividuals;
 }
 void GA::calFitness(){
+    maxFitness = -1;
     for (int i = 0; i < genotype.size(); ++i) {
         //计算适应度,并记录最优个体及其适应度.
         int dis = Node::getDistance(genotype[i]);
@@ -83,7 +84,7 @@ void GA::crossover(){
     std::vector<std::vector<int>> childGenotype;
     for (int i = 0; i < genotype.size() - 1; i += 2) {
         int r = rand() % 100;
-        if (r > crossoverP) {
+        if (r > pc) {
             childGenotype.push_back(genotype[i]);
             childGenotype.push_back(genotype[i + 1]);
             continue;
@@ -133,15 +134,17 @@ void GA::crossover(){
 void GA::mutation(){
     srand((unsigned int)time(0));
     for (int i = 0; i < individuals; ++i) {
-        int r = rand() % 500;
-        if (r < mutationP) {
-            int k = rand() % 52;
-            int k1 = rand() % 52;
-            std::swap(genotype[i][k1], genotype[i][k]);
+        for (int j = 0; j < genotype[0].size(); ++j) {
+            int r = rand() % 10000;
+            if (r < pm) {
+                int k1 = rand() % 52;
+                std::swap(genotype[i][k1], genotype[i][j]);
+            }
         }
+        
     }
 }
-void GA::encode(int size){
+void GA::initializePopulation(int size){
     srand((unsigned int)time(0));
     for (int i = 0; i < size; ++i) {
         std::vector<int> sequence(52);
@@ -160,9 +163,8 @@ void GA::encode(int size){
 }
 GA::GA(int individuals, int generations){
     this->individuals = individuals;
-    encode(individuals);
+    initializePopulation(individuals);
     fitness = std::vector<double>(individuals);
-    //draw(0);
     for (int i = 0; i < generations; ++i) {
         calFitness();
         selection();
