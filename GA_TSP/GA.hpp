@@ -21,10 +21,12 @@ private:
     int individuals;
     std::vector<std::vector<int>> genotype;
     std::vector<double> fitness;
-    int maxFitness = -1; //最大适应度,即最小距离
-    int eIndividuals; //最优个体序号
-    int pm = 10; //变异概率
-    int pc = 90; //交叉概率
+    std::vector<int> elite;
+    int eliteFit;
+    int maxFitness = INT32_MAX; //最大适应度,即最小距离
+    int pm = 3; //变异概率
+    int pc = 70; //交叉概率
+    
 public:
     std::vector<int> getGenotype(int i);
     int getmaxFItness();
@@ -35,6 +37,7 @@ public:
     void crossover(); //顺序交叉
     void mutation(); //随机交换两个节点
     void initializePopulation(int size); //对初始种群编码,随机生成路径
+    void saveElite();
     GA(int individuals, int generations);
 };
 std::vector<int> GA::getGenotype(int i){
@@ -43,17 +46,17 @@ std::vector<int> GA::getGenotype(int i){
 int GA::getmaxFItness(){
     return maxFitness;
 }
-int GA::geteIndividuals(){
-    return eIndividuals;
-}
 void GA::calFitness(){
-    maxFitness = -1;
+    eliteFit = INT32_MAX;
     for (int i = 0; i < genotype.size(); ++i) {
         //计算适应度,并记录最优个体及其适应度.
         int dis = Node::getDistance(genotype[i]);
-        if (maxFitness == -1 || dis < maxFitness) {
+        if (dis < maxFitness) {
             maxFitness = dis;
-            eIndividuals = i;
+        }
+        if (dis < eliteFit) {
+            eliteFit = dis;
+            elite = genotype[i];
         }
         fitness[i] = dis;
     }
@@ -67,9 +70,14 @@ void GA::selection(){
     std::vector<std::vector<int>> selectedGenotype;
     for (int i = 0; i < individuals; ++i) {
         int min = -1;
+        std::map<int,bool> occ;
         //随机选两个个体,取最优放入下一代,直到选够N
         for (int j = 0; j < size; ++j) {
             int r = rand() % individuals;
+            while (occ[r]) {
+                r = rand() % individuals;
+            }
+            occ[r] = true;
             if (min == -1 || fitness[r] < fitness[min]) {
                 min = r;
             }
@@ -82,11 +90,22 @@ void GA::crossover(){
     srand((unsigned int)time(0));
     int size = genotype[0].size();
     std::vector<std::vector<int>> childGenotype;
-    for (int i = 0; i < genotype.size() - 1; i += 2) {
+    std::map<int,bool> occ;
+    for (int i = 0; i < genotype.size() / 2; ++i) {
         int r = rand() % 100;
+        int k1 = rand() % individuals;
+        int k2 = rand() % individuals;
+        while (occ[k1]) {
+            k1 = rand() % individuals;
+        }
+        occ[k1] = true;
+        while (occ[k2]) {
+            k2 = rand() % individuals;
+        }
+        occ[k2] = true;
         if (r > pc) {
-            childGenotype.push_back(genotype[i]);
-            childGenotype.push_back(genotype[i + 1]);
+            childGenotype.push_back(genotype[k1]);
+            childGenotype.push_back(genotype[k2]);
             continue;
         }
         //固定start - end 段基因
@@ -95,8 +114,9 @@ void GA::crossover(){
         if (start > end) {
             std::swap(start, end);
         }
-        std::vector<int> parent1 = genotype[i];
-        std::vector<int> parent2 = genotype[i + 1];
+        
+        std::vector<int> parent1 = genotype[k1];
+        std::vector<int> parent2 = genotype[k2];
         std::map<int, bool> part1;
         std::map<int, bool> part2;
         std::vector<int> child1(size);
@@ -134,14 +154,16 @@ void GA::crossover(){
 void GA::mutation(){
     srand((unsigned int)time(0));
     for (int i = 0; i < individuals; ++i) {
-        for (int j = 0; j < genotype[0].size(); ++j) {
-            int r = rand() % 10000;
-            if (r < pm) {
-                int k1 = rand() % 52;
-                std::swap(genotype[i][k1], genotype[i][j]);
+        int r = rand() % 100;
+        if (r < pm) {
+            int k2 = rand() % 52;
+            int k1 = rand() % 52;
+            int l = std::min(k1,k2);
+            int r = std::max(k1,k2);
+            for (int p = l; p < (l + r) / 2; ++p) {
+                std::swap(genotype[i][p],genotype[i][r - p]);
             }
         }
-        
     }
 }
 void GA::initializePopulation(int size){
@@ -161,6 +183,27 @@ void GA::initializePopulation(int size){
         genotype.push_back(sequence);
     }
 }
+void GA::saveElite(){
+    int minD = INT32_MAX;
+    int minOrder = 0;
+    int maxD = 0;
+    int maxOrder = 0;
+    for (int i = 0; i < genotype.size(); ++i) {
+        int dis = Node::getDistance(genotype[i]);
+        if (dis > maxD) {
+            maxD = dis;
+            maxOrder = i;
+        }
+        if (dis < minD) {
+            minD = dis;
+            minOrder = i;
+        }
+    }
+    if (minD > eliteFit) {
+        genotype[maxOrder] = elite;
+    }
+    
+}
 GA::GA(int individuals, int generations){
     this->individuals = individuals;
     initializePopulation(individuals);
@@ -170,6 +213,7 @@ GA::GA(int individuals, int generations){
         selection();
         crossover();
         mutation();
+        saveElite();
         std::cout << "minDistance:" << maxFitness<< std::endl;
     }
 }

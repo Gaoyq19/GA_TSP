@@ -22,8 +22,8 @@ int main(int argc, const char * argv[]) {
     vector<int> sequence;
     int minDistance = -1;
     double total = 0;
-    for (int i = 0; i < 50; ++i) {
-        GA ga(500,500);
+    for (int i = 0; i < 5; ++i) {
+        GA ga(1200,500);
         if (minDistance == -1 || ga.getmaxFItness() < minDistance) {
             sequence = ga.getGenotype(i);
             minDistance = ga.getmaxFItness();
@@ -31,7 +31,7 @@ int main(int argc, const char * argv[]) {
         total += ga.getmaxFItness();
     }
     cout<< "minDistance:" << minDistance << endl;
-    cout<< "average:" << total / 50 <<endl;
+    cout<< "average:" << total / 5 <<endl;
     Node::draw(sequence);
     Py_Finalize();
     return 0;
