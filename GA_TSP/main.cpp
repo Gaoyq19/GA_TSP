@@ -23,7 +23,7 @@ int main(int argc, const char * argv[]) {
     int minDistance = -1;
     double total = 0;
     for (int i = 0; i < 5; ++i) {
-        GA ga(1500,2000);
+        GA ga(2000,5000);
         if (minDistance == -1 || ga.getmaxFItness() < minDistance) {
             sequence = ga.getGenotype(i);
             minDistance = ga.getmaxFItness();

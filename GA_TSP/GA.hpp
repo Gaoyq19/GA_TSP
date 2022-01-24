@@ -89,7 +89,7 @@ void GA::selection(){
     genotype = selectedGenotype;
 }
 void GA::crossover(){
-    pc = 90;
+    pc = 70;
     srand((unsigned int)time(0));
     int size = genotype[0].size();
     std::vector<std::vector<int>> childGenotype;
@@ -122,7 +122,7 @@ void GA::crossover(){
             }
             
         }else{
-            pc = 70;
+            pc = 90;
         }
 
         if (r > pc) {
@@ -182,18 +182,18 @@ void GA::mutation(){
         if (fit <= aveFitness) {
             int a = fit - eliteFit;
             int b = aveFitness - eliteFit;
-            if(b <= 50){
+            if(b <= 40){
                 pm = 600;
             }else{
                 double c = (double)a / b;
-                pm = 5 * c;
+                pm = 6 * c;
                 if(pm == 0){
                     pm = 4;
                 }
             }
             
         }else{
-            pm = 8;
+            pm = 10;
         }
         int r = rand() % 1000;
         if (r < pm) {
