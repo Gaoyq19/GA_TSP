@@ -254,7 +254,7 @@ GA::GA(int individuals, int generations){
         mutation();
         saveElite();
         std::cout << "minDistance:" << minDistance << " ave:" << aveFitness << std::endl;
-        if (minDistance < 7680) {
+        if (minDistance <= 7550) {
             break;
         }
     }
