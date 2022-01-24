@@ -23,12 +23,22 @@ int main(int argc, const char * argv[]) {
     int minDistance = -1;
     double total = 0;
     for (int i = 0; i < 5; ++i) {
-        GA ga(1200,500);
+        GA ga(1500,2000);
         if (minDistance == -1 || ga.getmaxFItness() < minDistance) {
             sequence = ga.getGenotype(i);
             minDistance = ga.getmaxFItness();
         }
         total += ga.getmaxFItness();
+        if (minDistance <= 7542) {
+            cout<< "minDistance:" << minDistance << endl;
+            for (int i = 0; i < sequence.size(); ++i) {
+                cout << i + 1 << ": " << sequence[i] << " ";
+            }
+            cout << endl;
+            Node::draw(sequence);
+            Py_Finalize();
+            return 0;
+        }
     }
     cout<< "minDistance:" << minDistance << endl;
     cout<< "average:" << total / 5 <<endl;

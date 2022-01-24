@@ -23,9 +23,10 @@ private:
     std::vector<double> fitness;
     std::vector<int> elite;
     int eliteFit;
-    int maxFitness = INT32_MAX; //最大适应度,即最小距离
-    int pm = 3; //变异概率
-    int pc = 70; //交叉概率
+    int minDistance = INT32_MAX; //最大适应度,即最小距离
+    int aveFitness = 0;
+    double pm = 3; //变异概率
+    double pc = 70; //交叉概率
     
 public:
     std::vector<int> getGenotype(int i);
@@ -44,21 +45,22 @@ std::vector<int> GA::getGenotype(int i){
     return genotype[i];
 }
 int GA::getmaxFItness(){
-    return maxFitness;
+    return eliteFit;
 }
 void GA::calFitness(){
     eliteFit = INT32_MAX;
     for (int i = 0; i < genotype.size(); ++i) {
         //计算适应度,并记录最优个体及其适应度.
         int dis = Node::getDistance(genotype[i]);
-        if (dis < maxFitness) {
-            maxFitness = dis;
+        if (dis < minDistance) {
+            minDistance = dis;
         }
         if (dis < eliteFit) {
             eliteFit = dis;
             elite = genotype[i];
         }
         fitness[i] = dis;
+        aveFitness += (dis - aveFitness) / (i + 1);
     }
 }
 void GA::draw(int i){
@@ -87,6 +89,7 @@ void GA::selection(){
     genotype = selectedGenotype;
 }
 void GA::crossover(){
+    pc = 90;
     srand((unsigned int)time(0));
     int size = genotype[0].size();
     std::vector<std::vector<int>> childGenotype;
@@ -103,6 +106,25 @@ void GA::crossover(){
             k2 = rand() % individuals;
         }
         occ[k2] = true;
+        
+        int larger = std::max(Node::getDistance(genotype[k1]), Node::getDistance(genotype[k2]));
+        if (larger <= aveFitness) {
+            int a = (larger - eliteFit);
+            int b = (aveFitness - eliteFit);
+            if(b <= 50){
+                pc = 90;
+            }else{
+                double c = (double)a / b;
+                pc = 60 * c;
+                if(pc == 0){
+                    pc = 40;
+                }
+            }
+            
+        }else{
+            pc = 70;
+        }
+
         if (r > pc) {
             childGenotype.push_back(genotype[k1]);
             childGenotype.push_back(genotype[k2]);
@@ -152,9 +174,28 @@ void GA::crossover(){
     genotype = childGenotype;
 }
 void GA::mutation(){
+    pm = 6;
     srand((unsigned int)time(0));
+    
     for (int i = 0; i < individuals; ++i) {
-        int r = rand() % 100;
+        int fit = Node::getDistance(genotype[i]);
+        if (fit <= aveFitness) {
+            int a = fit - eliteFit;
+            int b = aveFitness - eliteFit;
+            if(b <= 50){
+                pm = 600;
+            }else{
+                double c = (double)a / b;
+                pm = 5 * c;
+                if(pm == 0){
+                    pm = 4;
+                }
+            }
+            
+        }else{
+            pm = 8;
+        }
+        int r = rand() % 1000;
         if (r < pm) {
             int k2 = rand() % 52;
             int k1 = rand() % 52;
@@ -184,8 +225,7 @@ void GA::initializePopulation(int size){
     }
 }
 void GA::saveElite(){
-    int minD = INT32_MAX;
-    int minOrder = 0;
+    int minD = INT_MAX;
     int maxD = 0;
     int maxOrder = 0;
     for (int i = 0; i < genotype.size(); ++i) {
@@ -194,9 +234,8 @@ void GA::saveElite(){
             maxD = dis;
             maxOrder = i;
         }
-        if (dis < minD) {
+        if (dis < minD){
             minD = dis;
-            minOrder = i;
         }
     }
     if (minD > eliteFit) {
@@ -214,7 +253,10 @@ GA::GA(int individuals, int generations){
         crossover();
         mutation();
         saveElite();
-        std::cout << "minDistance:" << maxFitness<< std::endl;
+        std::cout << "minDistance:" << minDistance << " ave:" << aveFitness << std::endl;
+        if (minDistance < 7680) {
+            break;
+        }
     }
 }
 #endif /* GA_hpp */
